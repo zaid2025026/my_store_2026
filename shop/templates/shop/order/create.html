@@ -2,53 +2,83 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="container mt-5 text-end" dir="rtl">
+<style>
+    body { background-color: #f8f9fa; }
+    .checkout-card { border-radius: 20px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    .form-control { border-radius: 12px; padding: 12px; border: 1px solid #dee2e6; }
+    .form-control:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25 margin-bottom: 1rem; }
+    /* تحسين عرض المنتجات في الجوال */
+    .mobile-cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px dashed #eee;
+    }
+    .total-section { background: #e9ecef; border-radius: 15px; padding: 15px; }
+</style>
+
+<div class="container mt-4 mb-5 text-end" dir="rtl">
     <div class="row justify-content-center">
         
-        <div class="col-md-9 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">مراجعة المنتجات قبل التأكيد</h5>
-                    <span class="badge bg-primary">عدد الأصناف: {{ cart|length }}</span>
+        <div class="col-lg-8 col-md-10 mb-4">
+            <div class="card checkout-card shadow-sm">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-cart3 me-2"></i> مراجعة طلبك</h5>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>المنتج</th>
-                                <th>الكمية</th>
-                                <th>الإجمالي</th>
-                                <th class="text-center">إجراء</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in cart %}
-                            <tr>
-                                <td class="fw-bold">{{ item.product.name }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.total_price }} ريال</td>
-                                <td class="text-center">
-                                    <a href="{% url 'shop:cart_remove' item.product.id %}" class="btn btn-sm btn-outline-danger">
-                                        حذف
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot class="table-light">
-                            <tr class="fw-bold">
-                                <td colspan="2">إجمالي المبلغ المستحق:</td>
-                                <td colspan="2" class="text-primary fs-5">{{ cart.get_total_price }} ريال</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                <div class="card-body p-0">
+                    <div class="table-responsive d-none d-md-block">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>المنتج</th>
+                                    <th>الكمية</th>
+                                    <th>الإجمالي</th>
+                                    <th class="text-center">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cart %}
+                                <tr>
+                                    <td class="fw-bold">{{ item.product.name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.total_price }} ريال</td>
+                                    <td class="text-center">
+                                        <a href="{% url 'shop:cart_remove' item.product.id %}" class="btn btn-sm text-danger">حذف</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-md-none p-3">
+                        {% for item in cart %}
+                        <div class="mobile-cart-item">
+                            <div>
+                                <div class="fw-bold">{{ item.product.name }}</div>
+                                <small class="text-muted">الكمية: {{ item.quantity }}</small>
+                            </div>
+                            <div class="text-start">
+                                <div class="fw-bold text-primary">{{ item.total_price }} ريال</div>
+                                <a href="{% url 'shop:cart_remove' item.product.id %}" class="text-danger small text-decoration-none">حذف</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card-footer bg-light p-3 border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">إجمالي المبلغ:</span>
+                        <span class="fs-4 fw-bold text-primary">{{ cart.get_total_price }} ريال</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-9 mb-5">
-            <div class="card shadow p-4 rounded bg-white border-top border-primary border-4">
-                <h3 class="text-primary mb-4 pb-2 border-bottom text-center">بيانات الشحن والدفع</h3>
+        <div class="col-lg-8 col-md-10">
+            <div class="card checkout-card p-4">
+                <h4 class="fw-bold mb-4 text-center">📝 بيانات الشحن والدفع</h4>
                 
                 {% if messages %}
                     {% for message in messages %}
@@ -59,23 +89,29 @@
                     {% endfor %}
                 {% endif %}
 
-                <form method="post">
+                <form method="post" novalidate>
                     {% csrf_token %}
                     <div class="row">
                         {% for field in form %}
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold text-secondary">{{ field.label }}</label>
+                                <label class="form-label small fw-bold text-dark">{{ field.label }}</label>
                                 {% render_field field class="form-control" placeholder=field.label %}
                                 {% if field.errors %}
-                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
+                                    {% for error in field.errors %}
+                                        <div class="text-danger extra-small mt-1">{{ error }}</div>
+                                    {% endfor %}
                                 {% endif %}
                             </div>
                         {% endfor %}
                     </div>
-                    <hr class="my-4">
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">تأكيد الطلب النهائي</button>
-                        <a href="{% url 'shop:product_list' %}" class="btn btn-link text-secondary">إلغاء والعودة للمتجر</a>
+
+                    <div class="alert alert-info mt-3 py-2 small border-0 rounded-4">
+                        <i class="bi bi-info-circle-fill me-2"></i> الدفع سيتم نقداً عند الاستلام حالياً.
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill py-3 shadow fw-bold">تأكيد الطلب وشراء الآن</button>
+                        <a href="{% url 'shop:product_list' %}" class="btn btn-link text-muted text-decoration-none">إلغاء والعودة للمتجر</a>
                     </div>
                 </form>
             </div>
