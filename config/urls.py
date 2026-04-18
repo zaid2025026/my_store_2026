@@ -20,10 +20,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+   path('admin/', admin.site.urls),
     path('', include('shop.urls', namespace='shop')),
-    path('cart/', include('shop.cart.urls', namespace='cart')),
-    path('order/', include('shop.order.urls', namespace='order')),
 ]
 
 # هذا السطر ضروري لعرض صور المنتجات أثناء التطوير
