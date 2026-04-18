@@ -6,7 +6,7 @@
     body { background-color: #f8f9fa; }
     .checkout-card { border-radius: 20px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
     .form-control { border-radius: 12px; padding: 12px; border: 1px solid #dee2e6; }
-    .form-control:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.25 margin-bottom: 1rem; }
+    
     /* تحسين عرض المنتجات في الجوال */
     .mobile-cart-item {
         display: flex;
@@ -16,6 +16,7 @@
         border-bottom: 1px dashed #eee;
     }
     .total-section { background: #e9ecef; border-radius: 15px; padding: 15px; }
+    .extra-small { font-size: 0.75rem; }
 </style>
 
 <div class="container mt-4 mb-5 text-end" dir="rtl">
@@ -44,7 +45,7 @@
                                     <td>{{ item.quantity }}</td>
                                     <td>{{ item.total_price }} ريال</td>
                                     <td class="text-center">
-                                        <a href="{% url 'shop:cart_remove' item.product.id %}" class="btn btn-sm text-danger">حذف</a>
+                                        <a href="{% url 'cart:cart_remove' item.product.id %}" class="btn btn-sm text-danger">حذف</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -61,7 +62,7 @@
                             </div>
                             <div class="text-start">
                                 <div class="fw-bold text-primary">{{ item.total_price }} ريال</div>
-                                <a href="{% url 'shop:cart_remove' item.product.id %}" class="text-danger small text-decoration-none">حذف</a>
+                                <a href="{% url 'cart:cart_remove' item.product.id %}" class="text-danger small text-decoration-none">حذف</a>
                             </div>
                         </div>
                         {% endfor %}

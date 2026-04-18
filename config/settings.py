@@ -38,12 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # تطبيقاتك الخاصة
+ 
     'shop.apps.ShopConfig',
-    
-    # المكتبات الخارجية التي قمت بتثبيتها
-    'widget_tweaks',  # أضف هذا السطر هنا
+    'cart',
+    'order', # أضفه هنا أيضاً
+    'widget_tweaks',
+
 ]
 
 MIDDLEWARE = [
