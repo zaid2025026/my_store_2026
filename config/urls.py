@@ -20,10 +20,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-   path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
+    # هذا السطر هو الوحيد المسؤول عن المتجر، السلة، والطلبات
     path('', include('shop.urls', namespace='shop')),
 ]
 
-# هذا السطر ضروري لعرض صور المنتجات أثناء التطوير
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
