@@ -86,9 +86,9 @@
 
                 <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <h5 class="fw-bold mb-3"><i class="bi bi-info-circle me-2"></i> الوصف</h5>
-                    <p class="text-muted leading-relaxed" style="line-height: 1.8;">
+                    <div class="text-muted leading-relaxed" style="line-height: 1.8;">
                         {{ product.description|linebreaks }}
-                    </p>
+                    </div>
                 </div>
 
                 <div class="row g-2 mb-4">
@@ -108,9 +108,12 @@
 
                 <div class="sticky-bottom-mobile">
                     <div class="container d-flex gap-3">
-                        <a href="{% url 'cart:cart_add' product.id %}" class="btn btn-primary btn-lg w-100 rounded-pill py-3 shadow-lg fw-bold">
-                            <i class="bi bi-cart-plus me-2"></i> إضافة إلى السلة
-                        </a>
+                        <form action="{% url 'shop:cart_add' product.id %}" method="post" class="w-100">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill py-3 shadow-lg fw-bold">
+                                <i class="bi bi-cart-plus me-2"></i> إضافة إلى السلة
+                            </button>
+                        </form>
                         <button class="btn btn-light btn-lg rounded-pill shadow-sm px-4">
                             <i class="bi bi-heart"></i>
                         </button>
