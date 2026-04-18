@@ -21,14 +21,14 @@
                                 <h6 class="fw-bold mb-1">{{ product.name }}</h6>
                                 <p class="text-primary mb-1 small">{{ item.price }} ريال</p>
                                 
-                                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="d-flex align-items-center gap-2">
-                                    {% csrf_token %}
+                                <form action="{% url 'shop:cart_add' product.id %}" method="post" class="d-flex align-items-center gap-2">
+                                         {% csrf_token %}
                                     <div style="max-width: 80px;">
                                         {{ item.update_quantity_form.quantity }}
                                     </div>
                                     {{ item.update_quantity_form.override }}
                                     <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill">تحديث</button>
-                                    <a href="{% url 'cart:cart_remove' product.id %}" class="text-danger ms-auto mt-1">
+                                    <a href="{% url 'shop:cart_remove' product.id %}" class="text-danger ms-auto mt-1">
                                         <i class="bi bi-trash"></i> حذف
                                     </a>
                                 </form>
