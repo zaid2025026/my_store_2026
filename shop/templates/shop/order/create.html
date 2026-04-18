@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5 text-end" dir="rtl">
+    <div class="row justify-content-center">
+        
+        <div class="col-md-9 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">مراجعة المنتجات قبل التأكيد</h5>
+                    <span class="badge bg-primary">عدد الأصناف: {{ cart|length }}</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>المنتج</th>
+                                <th>الكمية</th>
+                                <th>الإجمالي</th>
+                                <th class="text-center">إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart %}
+                            <tr>
+                                <td class="fw-bold">{{ item.product.name }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.total_price }} ريال</td>
+                                <td class="text-center">
+                                    <a href="{% url 'shop:cart_remove' item.product.id %}" class="btn btn-sm btn-outline-danger">
+                                        حذف
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr class="fw-bold">
+                                <td colspan="2">إجمالي المبلغ المستحق:</td>
+                                <td colspan="2" class="text-primary fs-5">{{ cart.get_total_price }} ريال</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9 mb-5">
+            <div class="card shadow p-4 rounded bg-white border-top border-primary border-4">
+                <h3 class="text-primary mb-4 pb-2 border-bottom text-center">بيانات الشحن والدفع</h3>
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        {% for field in form %}
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-secondary">{{ field.label }}</label>
+                                {% render_field field class="form-control" placeholder=field.label %}
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <hr class="my-4">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg shadow-sm">تأكيد الطلب النهائي</button>
+                        <a href="{% url 'shop:product_list' %}" class="btn btn-link text-secondary">إلغاء والعودة للمتجر</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

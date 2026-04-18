@@ -1,0 +1,67 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4" style="direction: rtl; font-family: 'Cairo', sans-serif;">
+    <h2 class="mb-4 fw-bold text-end">سلة المشتريات</h2>
+
+    <div class="row">
+        <div class="col-lg-8">
+            {% for item in cart %}
+                {% with product=item.product %}
+                <div class="card border-0 shadow-sm rounded-4 mb-3 p-2">
+                    <div class="row g-0 align-items-center text-end">
+                        <div class="col-4 col-md-3">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" class="img-fluid rounded-3" alt="{{ product.name }}" style="max-height: 100px; object-fit: cover;">
+                            {% endif %}
+                        </div>
+                        <div class="col-8 col-md-9">
+                            <div class="card-body py-1">
+                                <h6 class="fw-bold mb-1">{{ product.name }}</h6>
+                                <p class="text-primary mb-1 small">{{ item.price }} ريال</p>
+                                
+                                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="d-flex align-items-center gap-2">
+                                    {% csrf_token %}
+                                    <div style="max-width: 80px;">
+                                        {{ item.update_quantity_form.quantity }}
+                                    </div>
+                                    {{ item.update_quantity_form.override }}
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill">تحديث</button>
+                                    <a href="{% url 'cart:cart_remove' product.id %}" class="text-danger ms-auto mt-1">
+                                        <i class="bi bi-trash"></i> حذف
+                                    </a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg rounded-4 p-3 bg-light">
+                <h5 class="fw-bold mb-3 text-end">ملخص السلة</h5>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="fw-bold fs-5 text-primary">{{ cart.get_total_price }} ريال</span>
+                    <span>الإجمالي:</span>
+                </div>
+                <hr>
+                <a href="{% url 'shop:product_list' %}" class="btn btn-outline-dark w-100 rounded-pill mb-2">متابعة التسوق</a>
+                <a href="#" class="btn btn-primary w-100 py-2 rounded-pill shadow">إتمام الطلب</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input[type="number"] {
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        padding: 2px 5px;
+        text-align: center;
+        width: 100%;
+    }
+</style>
+{% endblock %}
