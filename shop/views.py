@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Category, Product
 from django.shortcuts import redirect
-from shop.cart.forms import CartAddProductForm
+from .cart.forms import CartAddProductForm
 from .cart import Cart
 from django.contrib import messages # لإظهار رسائل تنبيه للمستخدم
 def product_list(request, category_slug=None):
@@ -37,7 +37,7 @@ def cart_detail(request):
             'override': True
         })
     return render(request, 'shop/cart/detail.html', {'cart': cart})
-from .forms import OrderCreateForm
+from .cart.forms import OrderCreateForm
 from .models import OrderItem
 def cart_remove(request, product_id):
     cart = Cart(request)
