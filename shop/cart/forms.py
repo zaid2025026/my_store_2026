@@ -1,19 +1,15 @@
 from django import forms
-from ..models import Order
-from .cart.forms import CartAddProductForm
-class OrderCreateForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control' # إضافة كلاس التنسيق لكل حقل
 
-    class Meta:
-        model = Order
-        fields = ['first_name', 'last_name', 'email', 'address', 'city']
-        labels = {
-            'first_name': 'الاسم الأول',
-            'last_name': 'اللقب / العائلة',
-            'email': 'البريد الإلكتروني',
-            'address': 'العنوان بالتفصيل',
-            'city': 'المدينة',
-        }
+PRODUCT_QUANTITY_CHOICES = [(i, str(i)) for i in range(1, 21)]
+
+class CartAddProductForm(forms.Form):
+    quantity = forms.TypedChoiceField(
+        choices=PRODUCT_QUANTITY_CHOICES,
+        coerce=int,
+        label='الكمية'
+    )
+    override = forms.BooleanField(
+        required=False,
+        initial=False,
+        widget=forms.HiddenInput
+    )

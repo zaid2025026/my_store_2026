@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
- 
+
+    # تطبيقاتك
     'shop.apps.ShopConfig',
     'shop.cart',
     'shop.order',
-    'widget_tweaks',
-
+    
+    # المكتبة التي قمنا بتثبيتها الآن
+    'widget_tweaks', 
 ]
 
 MIDDLEWARE = [
@@ -122,6 +124,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+# هذا هو السطر الذي ينقصك:
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# إذا لم تكن قد أضفت إعدادات الميديا، أضفها أيضاً لضمان عمل صور المنتجات:
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 CART_SESSION_ID = 'cart'
