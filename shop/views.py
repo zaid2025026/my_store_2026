@@ -5,7 +5,36 @@ from .models import Category, Product, OrderItem
 from .cart.cart import Cart 
 from .cart.forms import CartAddProductForm
 from .forms import OrderCreateForm
-
+import requests
+def send_telegram_message(order_id, customer_name, phone, total_price):
+    token = "8734187814:AAE66hJs4QEpEKszZqdeeUT13qZqEDhEbh0"
+    chat_id = "335892547"
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    
+    # رسالة واضحة ومنظمة مع إيموجي (بدون تنسيق معقد قد يسبب أخطاء)
+    message = (
+        f"🔔 طلب جديد - متجر زيد\n"
+        f"---------------------------\n"
+        f"📦 رقم الطلب: {order_id}\n"
+        f"👤 العميل: {customer_name}\n"
+        f"📱 الجوال: {phone}\n"
+        f"💰 الإجمالي: {total_price} ريال\n"
+        f"📊 الحالة: قيد الانتظار\n"
+        f"---------------------------\n"
+        f"✅ تم تسجيل الطلب بنجاح"
+    )
+    
+    payload = {
+        'chat_id': chat_id,
+        'text': message,
+        # حذفنا الـ parse_mode لضمان وصول الرسالة دائماً مهما كان محتواها
+    }
+    
+    try:
+        response = requests.post(url, data=payload, timeout=10)
+        print(f"تم الإرسال بنجاح: {response.json()}")
+    except Exception as e:
+        print(f"خطأ في الإرسال: {e}")
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -21,7 +50,7 @@ def product_list(request, category_slug=None):
 
 def product_detail(request, id, slug):
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
-    # إضافة فورم الكمية هنا ليعمل زر "إضافة للسلة" في صفحة التفاصيل
+    # نمرر المخزون المتاح للفورم إذا أردت إظهاره
     cart_product_form = CartAddProductForm()
     return render(request, 'shop/product/detail.html', {
         'product': product,
@@ -59,27 +88,41 @@ def order_create(request):
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
         if form.is_valid():
-            # فحص المخزون
-            for item in cart:
-                current_product = item['product'] # الكارت غالباً يعيد الكائن مباشرة
-                if current_product.stock < item['quantity']:
-                    messages.error(request, f"عذراً، الكمية من {current_product.name} غير كافية.")
-                    return render(request, 'shop/order/create.html', {'cart': cart, 'form': form})
-
-            # حفظ الطلب وتحديث المخزون
             order = form.save()
             for item in cart:
-                OrderItem.objects.create(order=order, 
-                                        product=item['product'], 
-                                        price=item['price'], 
+                OrderItem.objects.create(order=order,
+                                        product=item['product'],
+                                        price=item['price'],
                                         quantity=item['quantity'])
-                p = item['product']
-                p.stock -= item['quantity']
-                p.save()
-
+                
+                # تنقيص المخزون
+                product = item['product']
+                product.stock -= item['quantity']
+                product.save() 
+            
+            # --- الإرسال هنا (تأكد من المحاذاة مع الـ for) ---
+            try:
+                # نستخدم getattr لتجنب توقف الكود إذا كان الحقل فارغاً أو باسم مختلف
+                phone_number = getattr(order, 'phone', 'لم يتم إدخال رقم')
+                full_name = f"{order.first_name} {order.last_name}"
+                total_price = order.get_total_cost()
+                
+                print(f"جاري محاولة الإرسال للتلجرام: {full_name} - {phone_number}")
+                
+                send_telegram_message(
+                    order_id=order.id, 
+                    customer_name=full_name, 
+                    phone=phone_number, 
+                    total_price=total_price
+                )
+            except Exception as e:
+                print(f"فشل استدعاء دالة التلجرام: {e}")
+            
             cart.clear()
             return render(request, 'shop/order/created.html', {'order': order})
+        else:
+            print(f"خطأ في بيانات الفورم: {form.errors}") 
     else:
         form = OrderCreateForm()
-
+    
     return render(request, 'shop/order/create.html', {'cart': cart, 'form': form})

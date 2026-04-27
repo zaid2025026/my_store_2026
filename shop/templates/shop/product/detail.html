@@ -1,0 +1,108 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }} - متجر زيد{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5" style="direction: rtl; text-align: right;">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'shop:product_list' %}" class="text-decoration-none">الرئيسية</a></li>
+            <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}" class="text-decoration-none">{{ product.category.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-md-6 bg-white d-flex align-items-center justify-content-center p-4">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" 
+                     class="img-fluid rounded-3 shadow-sm" 
+                     alt="{{ product.name }}" 
+                     style="max-height: 500px; object-fit: contain;">
+            </div>
+
+            <div class="col-md-6 bg-light p-5">
+                <div class="product-info">
+                    <span class="badge bg-primary mb-2 px-3 py-2 rounded-pill">{{ product.category.name }}</span>
+                    <h1 class="fw-bold mb-3 display-6">{{ product.name }}</h1>
+                    
+                    <div class="d-flex align-items-center mb-4">
+                        <h2 class="text-success fw-bold m-0">{{ product.price }} ريال</h2>
+                        <span class="text-muted ms-3 fs-5"><del>{{ product.price|add:100 }} ريال</del></span> 
+                    </div>
+
+                    <h5 class="fw-bold border-bottom pb-2 mb-3">وصف المنتج:</h5>
+                    <p class="text-muted leading-relaxed mb-5" style="font-size: 1.1rem;">
+                        {{ product.description|linebreaks }}
+                    </p>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                        {% if product.stock > 0 %}
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted small">حالة المتجر:</span>
+                                    {% if product.stock <= 5 %}
+                                        <span class="badge bg-danger rounded-pill px-3">متبقي {{ product.stock }} قطع فقط!</span>
+                                    {% else %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3">متوفر في المخزون</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <form action="{% url 'shop:cart_add' product.id %}" method="post">
+                                {% csrf_token %}
+                                {# حقول مخفية لإرسال قطعة واحدة تلقائياً #}
+                                <div style="display:none;">
+                                    {{ cart_product_form.quantity }}
+                                    {{ cart_product_form.override }}
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm py-3">
+                                    <i class="bi bi-cart-plus me-2"></i> إضافة إلى السلة
+                                </button>
+                            </form>
+                        {% else %}
+                            <div class="text-center">
+                                <div class="alert alert-warning border-0 rounded-4 mb-0">
+                                    <i class="bi bi-exclamation-triangle me-2"></i> نأسف، المنتج غير متوفر حالياً
+                                </div>
+                                <button class="btn btn-secondary btn-lg w-100 rounded-pill mt-3 shadow-none disabled" style="opacity: 0.5;">
+                                    نفد المخزون
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-4 d-flex gap-3 text-center border-top pt-4">
+                        <div class="flex-fill">
+                            <i class="bi bi-truck fs-3 text-primary"></i>
+                            <p class="small text-muted mt-1 mb-0">توصيل سريع</p>
+                        </div>
+                        <div class="flex-fill border-start border-end">
+                            <i class="bi bi-shield-check fs-3 text-primary"></i>
+                            <p class="small text-muted mt-1 mb-0">ضمان الجودة</p>
+                        </div>
+                        <div class="flex-fill">
+                            <i class="bi bi-arrow-repeat fs-3 text-primary"></i>
+                            <p class="small text-muted mt-1 mb-0">إرجاع سهل</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .breadcrumb-item + .breadcrumb-item::before {
+        float: right;
+        padding-left: 0.5rem;
+    }
+    .leading-relaxed { line-height: 1.8; }
+    .btn-primary { transition: all 0.3s ease; }
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(13, 110, 253, 0.2) !important;
+    }
+</style>
+{% endblock %}

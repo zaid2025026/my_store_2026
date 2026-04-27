@@ -1,19 +1,23 @@
-from django import forms
-from .models import Order  # تعديل المسار ليكون مباشر من نفس المجلد
+from django import forms  # هذا السطر الناقص هو سبب المشكلة
+from .models import Order
 
 class OrderCreateForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        # تأكد من حذف 'email' من هذه القائمة نهائياً
+        fields = ['first_name', 'last_name', 'phone', 'address', 'city'] 
+        labels = {
+            'first_name': 'الاسم الأول',
+            'last_name': 'اللقب',
+            'phone': 'رقم الجوال',
+            'address': 'العنوان',
+            'city': 'المدينة',
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control' # إضافة كلاس التنسيق لكل حقل
-
-    class Meta:
-        model = Order
-        fields = ['first_name', 'last_name', 'email', 'address', 'city']
-        labels = {
-            'first_name': 'الاسم الأول',
-            'last_name': 'اللقب / العائلة',
-            'email': 'البريد الإلكتروني',
-            'address': 'العنوان بالتفصيل',
-            'city': 'المدينة',
-        }
+            field.widget.attrs.update({
+                'class': 'form-control rounded-pill',
+                'required': 'required' # هذا سيحل مشكلة "التنبيه عند ترك الحقل فارغاً"
+            })
