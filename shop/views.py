@@ -6,35 +6,36 @@ from .cart.cart import Cart
 from .cart.forms import CartAddProductForm
 from .forms import OrderCreateForm
 import requests
+import time
 def send_telegram_message(order_id, customer_name, phone, total_price):
     token = "8734187814:AAE66hJs4QEpEKszZqdeeUT13qZqEDhEbh0"
     chat_id = "335892547"
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     
-    # رسالة واضحة ومنظمة مع إيموجي (بدون تنسيق معقد قد يسبب أخطاء)
     message = (
         f"🔔 طلب جديد - متجر زيد\n"
         f"---------------------------\n"
-        f"📦 رقم الطلب: {order_id}\n"
-        f"👤 العميل: {customer_name}\n"
-        f"📱 الجوال: {phone}\n"
-        f"💰 الإجمالي: {total_price} ريال\n"
-        f"📊 الحالة: قيد الانتظار\n"
+        f"📦 رقم الطلب: {str(order_id)}\n"
+        f"👤 العميل: {str(customer_name)}\n"
+        f"📱 الجوال: {str(phone)}\n"
+        f"💰 الإجمالي: {float(total_price):.2f} ريال\n"
         f"---------------------------\n"
         f"✅ تم تسجيل الطلب بنجاح"
     )
     
-    payload = {
-        'chat_id': chat_id,
-        'text': message,
-        # حذفنا الـ parse_mode لضمان وصول الرسالة دائماً مهما كان محتواها
-    }
+    payload = {'chat_id': chat_id, 'text': message}
     
-    try:
-        response = requests.post(url, data=payload, timeout=10)
-        print(f"تم الإرسال بنجاح: {response.json()}")
-    except Exception as e:
-        print(f"خطأ في الإرسال: {e}")
+    # محاولة الإرسال لـ 3 مرات في حال انقطاع النت
+    for attempt in range(3): 
+        try:
+            response = requests.post(url, data=payload, timeout=10)
+            result = response.json()
+            if result.get('ok'):
+                print(f"✅ تم الإرسال في المحاولة رقم {attempt + 1}")
+                break # اخرج من الحلقة إذا تم الإرسال بنجاح
+        except Exception as e:
+            print(f"⚠️ محاولة {attempt + 1} فشلت بسبب النت.. سأحاول مجدداً بعد قليل")
+            time.sleep(5) # انتظر 5 ثوانٍ قبل المحاولة التالية
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
