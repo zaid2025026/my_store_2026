@@ -19,8 +19,8 @@ if settings.DEBUG:
     # كود للتأكد من وجود المستخدم وصلاحياته وكلمة مروره على السيرفر
 try:
     # ابحث عن المستخدم أو أنشئه إذا لم يكن موجوداً
-    user, created = User.objects.get_or_create(username='zaid_admin')
-    user.set_password('Zaid@2026') # ضع كلمة مرور قوية
+    user, created = User.objects.get_or_create(username='zaid')
+    user.set_password('zaid2025026"me') # ضع كلمة مرور قوية
     user.is_superuser = True
     user.is_staff = True
     user.save()
