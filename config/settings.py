@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # أضف هذا السطر هنا
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,7 +127,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 # هذا هو السطر الذي ينقصك:
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # إذا لم تكن قد أضفت إعدادات الميديا، أضفها أيضاً لضمان عمل صور المنتجات:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
