@@ -84,11 +84,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # هذا الكود سيجعل المشروع يعمل محلياً وعلى السيرفر دون مشاكل
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+# إذا كان التطبيق يعمل على Render، سيستخدم PostgreSQL تلقائياً
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600,
+        ssl_require=True
+    )
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
