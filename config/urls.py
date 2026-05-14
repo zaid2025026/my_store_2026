@@ -25,3 +25,5 @@ try:
     user.save()
 except Exception as e:
     pass
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

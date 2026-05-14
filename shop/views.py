@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Category, Product, OrderItem
@@ -7,9 +9,11 @@ from .cart.forms import CartAddProductForm
 from .forms import OrderCreateForm
 import requests
 import time
+
 def send_telegram_message(order_id, customer_name, phone, total_price):
-    token = "8734187814:AAE66hJs4QEpEKszZqdeeUT13qZqEDhEbh0"
-    chat_id = "335892547"
+    # قراءة القيم من متغيرات البيئة التي أضفتها في Render
+    token = os.environ.get('TELEGRAM_BOT_TOKEN')
+    chat_id = os.environ.get('TELEGRAM_CHAT_ID')
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     
     message = (
@@ -31,11 +35,14 @@ def send_telegram_message(order_id, customer_name, phone, total_price):
             response = requests.post(url, data=payload, timeout=10)
             result = response.json()
             if result.get('ok'):
-                print(f"✅ تم الإرسال في المحاولة رقم {attempt + 1}")
-                break # اخرج من الحلقة إذا تم الإرسال بنجاح
+                print(f"✅ تم الإرسال بنجاح إلى القناة في المحاولة رقم {attempt + 1}")
+                break 
+            else:
+                print(f"❌ فشل الإرسال من طرف تيليجرام: {result.get('description')}")
         except Exception as e:
             print(f"⚠️ محاولة {attempt + 1} فشلت بسبب النت.. سأحاول مجدداً بعد قليل")
             time.sleep(5) # انتظر 5 ثوانٍ قبل المحاولة التالية
+
 def product_list(request, category_slug=None):
     category = None
     categories = Category.objects.all()
@@ -51,7 +58,6 @@ def product_list(request, category_slug=None):
 
 def product_detail(request, id, slug):
     product = get_object_or_404(Product, id=id, slug=slug, available=True)
-    # نمرر المخزون المتاح للفورم إذا أردت إظهاره
     cart_product_form = CartAddProductForm()
     return render(request, 'shop/product/detail.html', {
         'product': product,
@@ -96,19 +102,19 @@ def order_create(request):
                                         price=item['price'],
                                         quantity=item['quantity'])
                 
-                # تنقيص المخزون
+                # تنقيص المخزون لضمان دقة إدارة المستودع
                 product = item['product']
                 product.stock -= item['quantity']
                 product.save() 
             
-            # --- الإرسال هنا (تأكد من المحاذاة مع الـ for) ---
+            # --- عملية الإرسال لتيليجرام ---
             try:
-                # نستخدم getattr لتجنب توقف الكود إذا كان الحقل فارغاً أو باسم مختلف
+                # جلب البيانات من كائن الطلب (order)
                 phone_number = getattr(order, 'phone', 'لم يتم إدخال رقم')
                 full_name = f"{order.first_name} {order.last_name}"
                 total_price = order.get_total_cost()
                 
-                print(f"جاري محاولة الإرسال للتلجرام: {full_name} - {phone_number}")
+                print(f"جاري إرسال إشعار الطلب للبوت الجديد: {full_name}")
                 
                 send_telegram_message(
                     order_id=order.id, 
@@ -117,7 +123,7 @@ def order_create(request):
                     total_price=total_price
                 )
             except Exception as e:
-                print(f"فشل استدعاء دالة التلجرام: {e}")
+                print(f"فشل في استدعاء وظيفة الإرسال: {e}")
             
             cart.clear()
             return render(request, 'shop/order/created.html', {'order': order})
