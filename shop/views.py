@@ -15,7 +15,7 @@ import time
 def send_telegram_message(order_id, customer_name, phone, total_price):
     # وضعنا القيم الصريحة مباشرة لكي يعمل الكود من جهازك الكمبيوتر فوراً
     token = "8621006684:AAF_T8KPXV_ZtVPQ6VK1D-e0E6pgJ_5Uw4A"
-    chat_id = "-1001103603405"  # معرف قناتك الموثق والصحيح
+    chat_id = "@Zaid2016"  # معرف قناتك الموثق والصحيح
 
     url = f"https://api.telegram.org/bot{token}/sendMessage"
 
