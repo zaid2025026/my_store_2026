@@ -110,7 +110,7 @@
         <div class="d-flex align-items-center gap-2">
           <!-- تتبع الطلب -->
           <a
-            href="{% url 'shop:order_track' %}"
+            href="{% url 'shop:order_track' %}?new=1"
             class="track-order-link d-none d-lg-inline-flex align-items-center px-3 py-2"
           >
             <i class="bi bi-search me-1"></i>
@@ -161,10 +161,10 @@
       </a>
 
       <!-- تتبع الطلب -->
-      <a href="{% url 'shop:order_track' %}">
-        <i class="bi bi-search"></i>
-        <span>تتبع الطلب</span>
-      </a>
+      <a href="{% url 'shop:order_track' %}?new=1">
+    <i class="bi bi-search"></i>
+    <span>تتبع الطلب</span>
+    </a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

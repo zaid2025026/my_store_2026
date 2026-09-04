@@ -507,22 +507,38 @@ def order_create(request):
 
 def order_track(request):
     """
-    البحث عن طلب باستخدام:
-    1. رقم الطلب
-    2. رمز المتابعة
+    تتبع الطلب للعميل.
 
-    لا يتم عرض أي طلب بدون توفر البيانات الصحيحة.
+    السلوك:
+    - ?new=1 يبدأ عملية تتبع جديدة ويمسح بيانات التتبع فقط.
+    - POST يتحقق من رقم الطلب ورمز المتابعة ويحفظهما في Session.
+    - بعد نجاح البحث يتم Redirect إلى GET لمنع إعادة إرسال النموذج عند Refresh.
+    - Refresh يعرض آخر طلب تم التحقق منه.
+    - فتح صفحة التتبع مباشرة يحافظ على الطلب الموجود في Session.
+    - لا يتم المساس بالسلة أو أي بيانات Session أخرى.
     """
 
-    order = None
+    # =========================================================
+    # 1) بدء تتبع جديد
+    # =========================================================
+    if request.method == "GET" and request.GET.get("new") == "1":
+        request.session.pop("tracked_order_id", None)
+        request.session.pop("tracked_order_code", None)
+        request.session.modified = True
 
+        return render(
+            request,
+            "shop/order/track.html",
+            {"order": None},
+        )
+
+    # =========================================================
+    # 2) البحث عن الطلب
+    # =========================================================
     if request.method == "POST":
-
         order_id = request.POST.get("order_id", "").strip()
-
         tracking_code = request.POST.get("tracking_code", "").strip()
 
-        # التحقق الأساسي
         if not order_id or not tracking_code:
             messages.error(
                 request,
@@ -532,9 +548,9 @@ def order_track(request):
             return render(
                 request,
                 "shop/order/track.html",
+                {"order": None},
             )
 
-        # البحث عن الطلبين معاً
         try:
             order = Order.objects.prefetch_related("items__product").get(
                 id=order_id,
@@ -550,39 +566,61 @@ def order_track(request):
             return render(
                 request,
                 "shop/order/track.html",
+                {"order": None},
             )
 
-        # حفظ الطلب المتتبع في الجلسة
+        # =====================================================
+        # حفظ الطلب الذي تم التحقق منه في Session
+        # =====================================================
         request.session["tracked_order_id"] = order.id
-
         request.session["tracked_order_code"] = order.tracking_code
-
         request.session.modified = True
 
-    else:
+        # =====================================================
+        # POST → Redirect → GET
+        #
+        # يمنع مشكلة إعادة إرسال POST عند تحديث الصفحة.
+        # الطلب سيُسترجع من Session في طلب GET التالي.
+        # =====================================================
+        return redirect("shop:order_track")
 
-        # إذا كان العميل قد تتبع طلباً سابقاً
-        tracked_order_id = request.session.get("tracked_order_id")
+    # =========================================================
+    # 3) GET عادي / Refresh
+    # =========================================================
+    order = None
 
-        tracked_order_code = request.session.get("tracked_order_code")
+    tracked_order_id = request.session.get("tracked_order_id")
+    tracked_order_code = request.session.get("tracked_order_code")
 
-        if tracked_order_id and tracked_order_code:
-
+    if tracked_order_id and tracked_order_code:
+        try:
             order = (
                 Order.objects.prefetch_related("items__product")
                 .filter(
-                    id=tracked_order_id,
+                    id=int(tracked_order_id),
                     tracking_code=tracked_order_code,
                 )
                 .first()
             )
 
+        except (TypeError, ValueError):
+            order = None
+
+        # =====================================================
+        # إذا أصبحت بيانات Session غير صالحة
+        # =====================================================
+        if order is None:
+            request.session.pop("tracked_order_id", None)
+            request.session.pop("tracked_order_code", None)
+            request.session.modified = True
+
+    # =========================================================
+    # 4) عرض صفحة التتبع
+    # =========================================================
     return render(
         request,
         "shop/order/track.html",
-        {
-            "order": order,
-        },
+        {"order": order},
     )
 
 
