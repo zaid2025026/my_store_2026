@@ -1,0 +1,144 @@
+[
+{
+  "model": "shop.category",
+  "pk": 1,
+  "fields": {
+    "name": "ÅáßÊÑæäíÇÊ",
+    "slug": "lktronyt"
+  }
+},
+{
+  "model": "shop.category",
+  "pk": 2,
+  "fields": {
+    "name": "ãáÇÈÓ",
+    "slug": "htf"
+  }
+},
+{
+  "model": "shop.category",
+  "pk": 3,
+  "fields": {
+    "name": "ÇÏæÇÊ ÒÌÇÌíÉ",
+    "slug": "dot-zggy"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 3,
+  "fields": {
+    "category": 1,
+    "name": "áÇÈÊæÈ",
+    "slug": "lbtob",
+    "image": "products/laptop_Wu9Av6b.ping.webp",
+    "description": "íõÚÏ ÌåÇÒ ASUS Vivobook 16 ÈãæÇÕİÇÊ i9 æÑÇãÇÊ 32GB æÍÔÇğ ÍŞíŞíÇğ İí ÇáÃÏÇÁ¡ æåæ ãÕãã áíÊÌÇæÒ ÍÏæÏ ÇáãåÇã ÇáíæãíÉ Åáì ãÓÊæì ÇáÇÍÊÑÇİ İí ÇáÊÕãíã¡ ÇáãæäÊÇÌ¡ æÇáÈÑãÌÉ. \r\nMangiamo Gelato Caffe\r\nMangiamo Gelato Caffe\r\n +1\r\nÅáíß æÕİ ãŞÊÑÍ ááãäÊÌ ÌÇåÒ ááÚÑÖ İí ãÊÌÑß ÈÓÚÑ 2000:\r\náÇÈÊæÈ ASUS Vivobook 16 - ŞæÉ ÎÇÑŞÉ áÅÈÏÇÚ ÈáÇ ÍÏæÏ\r\nÇÓÊãÊÚ ÈÊÌÑÈÉ ÃÏÇÁ ÇÓÊËäÇÆíÉ ãÚ æÇÍÏ ãä ÃŞæì ÃÌåÒÉ ÓáÓáÉ Vivobook. åĞÇ ÇáÅÕÏÇÑ ãÎÕÕ áãä áÇ íŞÈá ÈÛíÑ ÇáÓÑÚÉ ÇáŞÕæì æÇáŞÏÑÉ ÇáÚÇáíÉ Úáì ÊÚÏÏ ÇáãåÇã ÈİÖá ãÚÇáÌ i9 ÇáÌÈÇÑ æĞÇßÑÉ ÚÔæÇÆíÉ ÖÎãÉ. \r\nUbuy Ecuador\r\nUbuy Ecuador\r\n +1\r\nÇáãæÇÕİÇÊ ÇáÑÆíÓíÉ:\r\nÇáãÚÇáÌ: Intel Core i9-13900H ãä ÇáÌíá ÇáËÇáË ÚÔÑ¡ ÈÜ 14 äæÇÉ æÓÑÚÉ ÊÕá Åáì 5.4 ÌíÌÇåÑÊÒ¡ áíãäÍß ÃÏÇÁğ íÖÇåí ÇáÃÌåÒÉ ÇáãßÊÈíÉ.\r\nÇáĞÇßÑÉ (RAM): 32GB DDR4¡ ÊÖãä áß ÓáÇÓÉ İÇÆŞÉ ÚäÏ İÊÍ ÚÔÑÇÊ ÇáÈÑÇãÌ æÇáÊÈæíÈÇÊ İí æŞÊ æÇÍÏ Ïæä Ãí ÊÃÎíÑ.\r\nÇáÊÎÒíä: 1TB SSD NVMe PCIe 4.0 İÇÆŞ ÇáÓÑÚÉ¡ áÊÔÛíá ÇáäÙÇã æÇáÈÑÇãÌ İí ËæÇäò ãÚÏæÏÉ.\r\nÇáÔÇÔÉ: ÔÇÔÉ NanoEdge ãŞÇÓ 16 ÈæÕÉ ÈÏŞÉ WUXGA (1920x1200) æäÓÈÉ ÚÑÖ 16:10¡ ÊæİÑ ãÓÇÍÉ ÑÄíÉ ÃæÓÚ æÃáæÇäÇğ ÍíÉ.\r\nÇáÊÕãíã: åíßá ÃäíŞ æÎİíİ ÇáæÒä (ÍæÇáí 1.88 ßÌã) ãÚ ãİÕáÉ ÊÏæÑ 180 ÏÑÌÉ áÓåæáÉ ÇáãÔÇÑßÉ æÇáÚãá. \r\nAmazon.com\r\nAmazon.com\r\n +6\r\náãÇĞÇ ÊÎÊÇÑ åĞÇ ÇáÌåÇÒ¿\r\nÃÏÇÁ ÇÍÊÑÇİí: ãËÇáí áãÕããí ÇáÌÑÇİíß¡ ãåäÏÓí ÇáÈÑãÌíÇÊ¡ æãäÔÆí ÇáãÍÊæì ÇáĞíä íÍÊÇÌæä áŞæÉ ãÚÇáÌÉ ÚÇáíÉ.\r\nÍãÇíÉ ÇáÎÕæÕíÉ: ãÒæÏ ÈÛØÇÁ İíÒíÇÆí ááßÇãíÑÇ (Webcam Shield) áÖãÇä Ããäß ÇáÔÎÕí.\r\nÇÊÕÇá ÍÏíË: íÏÚã ÊŞäíÇÊ WiFi 6E æ Bluetooth 5.3 áÓÑÚÉ ÅäÊÑäÊ æÇÓÊŞÑÇÑ ÇÊÕÇá áÇ ãËíá áåãÇ.\r\näÙÇã ÇáÊÔÛíá: íÃÊí ãÍãáÇğ ÈÜ Windows 11 Pro áíæİÑ áß ÃİÖá ÃÏæÇÊ ÇáÅäÊÇÌíÉ æÇáÍãÇíÉ. \r\nASUS\r\nASUS\r\n +5\r\nÇáÓÚÑ: 2000 (ãÊæİÑ ÇáÂä áİÊÑÉ ãÍÏæÏÉ):\r\nŞæÉ ÑÓæãíÉ áÇ ÊõÖÇåì (Graphics)\r\nßÑÊ ÇáÔÇÔÉ: ãÌåÒ ÈßÑÊ NVIDIA GeForce RTX 4060 (Ãæ RTX 4050 ÍÓÈ ÇáãæÏíá) ÈĞÇßÑÉ 8GB GDDR6 ãÎÕÕÉ.\r\nÊŞäíÇÊ ãÊŞÏãÉ: íÏÚã ÊŞäíÉ Ray Tracing áÊŞÏíã ÅÖÇÁÉ æÇŞÚíÉ¡ æDLSS 3.0 ÇáãÏÚæã ÈÇáĞßÇÁ ÇáÇÕØäÇÚí áÑİÚ ÃÏÇÁ ÇáÃáÚÇÈ æÇáÈÑÇãÌ Ïæä ÇáÊÃËíÑ Úáì ÇáÌæÏÉ.\r\nãËÇáí ááãÈÏÚíä: ÇáßÑÊ ãÚÊãÏ ãä NVIDIA Studio¡ ããÇ íÌÚáå ÇáÎíÇÑ ÇáÃæá áÈÑÇãÌ Adobe (Premiere, Photoshop) æÈÑÇãÌ ÇáåäÏÓÉ æÇáÑäÏÑ ËáÇËí ÇáÃÈÚÇÏ. \r\nASUS\r\nASUS\r\n +2\r\nÖãÇä íãäÍß ÑÇÍÉ ÇáÈÇá (Warranty)\r\nÖãÇä Ïæáí áãÏÉ ÓäÊíä: ÇáÌåÇÒ ãÔãæá ÈÖãÇä ASUS ÇáÏæáí ÇáĞí íÛØí ŞØÚ ÇáÛíÇÑ æÃÌæÑ ÇáÅÕáÇÍ ãÌÇäÇğ ÈäÓÈÉ 100% İí ãÑÇßÒ ÇáÎÏãÉ ÇáãÚÊãÏÉ.\r\nÖãÇä ASUS ÇáãËÇáí (Perfect Warranty): ÍãÇíÉ ÅÖÇİíÉ (İí ÈÚÖ ÇáãäÇØŞ) ÊÛØí ÇáÃÖÑÇÑ ÇáÚÇÑÖÉ ãËá ÇäÓßÇÈ ÇáÓæÇÆá Ãæ ÇáÕÏãÇÊ ÛíÑ ÇáãŞÕæÏÉ áãÏÉ ÚÇã ßÇãá.\r\nÓåæáÉ ÇáÊİÚíá: íãßäß ÊİÚíá ÇáÖãÇä æÑÈØå ÈÌåÇÒß ÈÓåæáÉ ÚÈÑ ÊØÈíŞ MyASUS Ãæ ÇáãæŞÚ ÇáÑÓãí ÎáÇá 90 íæãÇğ ãä ÇáÔÑÇÁ. \r\nASUS\r\nASUS\r\n +4",
+    "price": "2000.00",
+    "stock": 0,
+    "available": true,
+    "created": "2026-04-20T08:16:55.910Z",
+    "updated": "2026-06-23T17:10:53.648Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 4,
+  "fields": {
+    "category": 1,
+    "name": "åÇÊİ",
+    "slug": "htf",
+    "image": "products/atef_6QBf3Ow.bing.webp",
+    "description": "åÇÊİ redme pro max 2011",
+    "price": "500.00",
+    "stock": 1,
+    "available": true,
+    "created": "2026-04-20T08:19:31.584Z",
+    "updated": "2026-06-23T17:46:07.032Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 5,
+  "fields": {
+    "category": 3,
+    "name": "ãÒåÑíÇÊ",
+    "slug": "mzhryt",
+    "image": "products/geps_zz8IzTe.bmp",
+    "description": "ÍÇæíÇÊ ááÒåæÑ ÑÇŞíÉ æÈÊÕãíã ÑÇÆÚ æÌĞÇÈ ŞæíÉ",
+    "price": "100.00",
+    "stock": 0,
+    "available": true,
+    "created": "2026-04-20T15:40:51.722Z",
+    "updated": "2026-06-23T16:09:02.498Z"
+  }
+},
+{
+  "model": "shop.product",
+  "pk": 6,
+  "fields": {
+    "category": 3,
+    "name": "ãÒåÑíÉ ÌÈÓ",
+    "slug": "mzhry-gbs",
+    "image": "products/geps_CSxoyX0.bmp",
+    "description": "ÍÇæíÉ ãÕäæÚå íÏæíÉ ÈÍÑİå ãÍáíÉ ÖÏ ÇáßÓÑ Çæ ÇáÎÏÔ áÇ íÊÛíÑ ÔßáåÇ",
+    "price": "200.00",
+    "stock": 7,
+    "available": true,
+    "created": "2026-04-21T14:44:58.727Z",
+    "updated": "2026-06-23T17:33:10.307Z"
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$mUbS9oYwXMikxjve6DBMLp$UeULRpcntn2/c8Ld1UdXj6x4PrvDyzSzt7E/ygGg9jI=",
+    "last_login": "2026-06-23T18:00:38.163Z",
+    "is_superuser": true,
+    "username": "zaid",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-16T08:26:23.064Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$8otUB2AYQIjqxel7qReza5$hEr6NxZEhvYmSjauai4O0VcmMuNLPB0PeoQu4PfsVHk=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "zaid2025",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-04-30T22:27:27.925Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$5SK5DJJ0aWrXmX0goV5XTX$0PlDllpaKvvQoIUQNWfblm2dBUF4MSpfMfkZQqbN0gg=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "zaid_admin",
+    "first_name": "",
+    "last_name": "",
+    "email": "zaid@example.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-06-23T18:12:15.868Z",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

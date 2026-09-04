@@ -1,0 +1,377 @@
+﻿{% extends "shop/base.html" %} {% block title %}تتبع طلبك - متجر زيد{% endblock %} {% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="text-center mb-4">
+                <h1 class="fw-bold">
+                    <i class="bi bi-search me-2"></i>
+                    تتبع طلبك
+                </h1>
+                <p class="text-muted">
+                    أدخل رقم الطلب ورمز المتابعة لمعرفة حالة طلبك.
+                </p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if not order %}
+
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4 p-md-5">
+
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <div class="mb-4">
+                                <label for="order_id" class="form-label fw-bold">
+                                    رقم الطلب
+                                </label>
+
+                                <input
+                                    type="number"
+                                    class="form-control form-control-lg rounded-3"
+                                    id="order_id"
+                                    name="order_id"
+                                    placeholder="مثال: 15"
+                                    required
+                                >
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="tracking_code" class="form-label fw-bold">
+                                    رمز متابعة الطلب
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control form-control-lg rounded-3 text-center"
+                                    id="tracking_code"
+                                    name="tracking_code"
+                                    placeholder="أدخل الرمز المكون من 6 أرقام"
+                                    maxlength="6"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{6}"
+                                    required
+                                >
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary btn-lg rounded-pill w-100"
+                            >
+                                <i class="bi bi-search me-2"></i>
+                                تتبع الطلب
+                            </button>
+
+                        </form>
+
+                        <div class="alert alert-info mt-4 mb-0 rounded-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            ستجد رقم الطلب ورمز المتابعة في الفاتورة التي ظهرت بعد إتمام الطلب.
+                        </div>
+
+                    </div>
+                </div>
+
+            {% else %}
+
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+                            <div>
+                                <h3 class="fw-bold mb-1">
+                                    الطلب #{{ order.id }}
+                                </h3>
+
+                                <small class="text-muted">
+                                    {{ order.created|date:"Y-m-d H:i" }}
+                                </small>
+                            </div>
+
+                            <div>
+                                {% if order.status == "pending" %}
+                                    <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                                        قيد الانتظار
+                                    </span>
+
+                                {% elif order.status == "processing" %}
+                                    <span class="badge bg-info text-dark fs-6 px-3 py-2">
+                                        جاري التجهيز
+                                    </span>
+
+                                {% elif order.status == "shipped" %}
+                                    <span class="badge bg-primary fs-6 px-3 py-2">
+                                        تم الشحن
+                                    </span>
+
+                                {% elif order.status == "delivered" %}
+                                    <span class="badge bg-success fs-6 px-3 py-2">
+                                        تم التسليم
+                                    </span>
+
+                                {% elif order.status == "canceled" %}
+                                    <span class="badge bg-danger fs-6 px-3 py-2">
+                                        ملغي
+                                    </span>
+
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-person me-2"></i>
+                            بيانات العميل
+                        </h5>
+
+                        <div class="row g-3 mb-4">
+
+                            <div class="col-md-6">
+                                <div class="bg-light rounded-3 p-3">
+                                    <small class="text-muted d-block">
+                                        الاسم
+                                    </small>
+
+                                    <strong>
+                                        {{ order.first_name }} {{ order.last_name }}
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="bg-light rounded-3 p-3">
+                                    <small class="text-muted d-block">
+                                        رقم الجوال
+                                    </small>
+
+                                    <strong>
+                                        {{ order.phone }}
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="bg-light rounded-3 p-3">
+                                    <small class="text-muted d-block">
+                                        المدينة
+                                    </small>
+
+                                    <strong>
+                                        {{ order.city }}
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="bg-light rounded-3 p-3">
+                                    <small class="text-muted d-block">
+                                        العنوان
+                                    </small>
+
+                                    <strong>
+                                        {{ order.address }}
+                                    </strong>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-cart3 me-2"></i>
+                            المنتجات
+                        </h5>
+
+                        <div class="table-responsive">
+
+                            <table class="table align-middle">
+
+                                <thead>
+                                    <tr>
+                                        <th>المنتج</th>
+                                        <th class="text-center">الكمية</th>
+                                        <th class="text-end">السعر</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    {% for item in order.items.all %}
+
+                                        <tr>
+
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+
+                                                    {% if item.product.image %}
+                                                        <img
+                                                            src="{{ item.product.image.url }}"
+                                                            alt="{{ item.product.name }}"
+                                                            width="55"
+                                                            height="55"
+                                                            class="rounded-3"
+                                                            style="object-fit: cover;"
+                                                        >
+                                                    {% endif %}
+
+                                                    <span>
+                                                        {{ item.product.name }}
+                                                    </span>
+
+                                                </div>
+                                            </td>
+
+                                            <td class="text-center">
+                                                {{ item.quantity }}
+                                            </td>
+
+                                            <td class="text-end fw-bold">
+                                                {{ item.get_cost }}
+                                            </td>
+
+                                        </tr>
+
+                                    {% empty %}
+
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted py-4">
+                                                لا توجد منتجات في هذا الطلب.
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                                <tfoot>
+
+                                    <tr>
+                                        <td colspan="2" class="text-end fw-bold">
+                                            الإجمالي
+                                        </td>
+
+                                        <td class="text-end fw-bold fs-5">
+                                            {{ order.get_total_cost }}
+                                        </td>
+                                    </tr>
+
+                                </tfoot>
+
+                            </table>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="alert alert-secondary rounded-3">
+
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+                                <div>
+                                    <i class="bi bi-shield-lock me-2"></i>
+                                    <strong>
+                                        رمز متابعة الطلب:
+                                    </strong>
+                                </div>
+
+                                <span class="fw-bold fs-5">
+                                    {{ order.tracking_code }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        {% if order.status == "pending" %}
+
+                            <div class="alert alert-warning rounded-3">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                يمكنك إلغاء الطلب طالما أنه ما زال قيد الانتظار.
+                            </div>
+
+                            <form
+                                method="post"
+                                action="{% url 'shop:customer_cancel_order' order.id %}"
+                                onsubmit="return confirm('هل أنت متأكد من رغبتك في إلغاء الطلب؟');"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger rounded-pill w-100"
+                                >
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    إلغاء الطلب
+                                </button>
+
+                            </form>
+
+                        {% elif order.status == "canceled" %}
+
+                            <div class="alert alert-danger rounded-3">
+                                <i class="bi bi-x-circle me-2"></i>
+                                تم إلغاء هذا الطلب.
+                            </div>
+
+                        {% elif order.status == "processing" %}
+
+                            <div class="alert alert-info rounded-3">
+                                <i class="bi bi-box-seam me-2"></i>
+                                طلبك قيد التجهيز حاليًا.
+                            </div>
+
+                        {% elif order.status == "shipped" %}
+
+                            <div class="alert alert-primary rounded-3">
+                                <i class="bi bi-truck me-2"></i>
+                                تم شحن طلبك.
+                            </div>
+
+                        {% elif order.status == "delivered" %}
+
+                            <div class="alert alert-success rounded-3">
+                                <i class="bi bi-check-circle me-2"></i>
+                                تم تسليم طلبك بنجاح.
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <div class="text-center">
+
+                    <a
+                        href="{% url 'shop:product_list' %}"
+                        class="btn btn-outline-primary rounded-pill px-4"
+                    >
+                        <i class="bi bi-shop me-2"></i>
+                        العودة إلى المتجر
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
