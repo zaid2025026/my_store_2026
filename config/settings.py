@@ -11,13 +11,20 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "قيمة-مؤقتة-للتطو
 # تذكر تغيير هذه القيمة في Render لتكون True عند التشغيل الفعلي
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip()
-    for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
-    if origin.strip()
+# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "my-store-2026-1.onrender.com",
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://my-store-2026-1.onrender.com",
+]
+# CSRF_TRUSTED_ORIGINS = [
+#     origin.strip()
+#     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+#     if origin.strip()
+# ]
 
 SECURE_SSL_REDIRECT = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
