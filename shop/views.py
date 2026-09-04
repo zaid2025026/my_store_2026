@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import Category, Product, Order, OrderItem
+from .models import Category, DeliveryZone, Product, Order, OrderItem
 from .cart.cart import Cart
 from .cart.forms import CartAddProductForm
 from .forms import OrderCreateForm
@@ -368,6 +368,7 @@ def cart_remove(request, product_id):
 def order_create(request):
     """
     إنشاء الطلب وخصم المخزون بشكل آمن داخل Transaction.
+    يتم تحديد رسوم التوصيل حسب المدينة من DeliveryZone.
     """
 
     cart = Cart(request)
@@ -386,13 +387,46 @@ def order_create(request):
 
         if form.is_valid():
 
+            # ==================================================
+            # 1. تحديد منطقة التوصيل
+            # ==================================================
+
+            city = form.cleaned_data["city"].strip()
+
+            delivery_zone = DeliveryZone.objects.filter(
+                city__iexact=city,
+                active=True,
+            ).first()
+
+            if not delivery_zone:
+                form.add_error(
+                    "city",
+                    "عذرًا، التوصيل غير متاح حاليًا إلى هذه المدينة.",
+                )
+
+                return render(
+                    request,
+                    "shop/order/create.html",
+                    {
+                        "cart": cart,
+                        "form": form,
+                    },
+                )
+
+            # ==================================================
+            # 2. الحصول على المنتجات وقفلها
+            # ==================================================
+
             product_ids = [item["product"].id for item in cart]
 
             products = Product.objects.select_for_update().filter(id__in=product_ids)
 
             products_by_id = {product.id: product for product in products}
 
-            # التحقق من المخزون قبل إنشاء الطلب
+            # ==================================================
+            # 3. التحقق من المخزون قبل إنشاء الطلب
+            # ==================================================
+
             for item in cart:
 
                 product = products_by_id.get(item["product"].id)
@@ -400,7 +434,7 @@ def order_create(request):
                 if not product:
                     messages.error(
                         request,
-                        "أحد المنتجات لم يعد متاحاً.",
+                        "أحد المنتجات لم يعد متاحًا.",
                     )
 
                     return redirect("shop:cart_detail")
@@ -408,7 +442,7 @@ def order_create(request):
                 if not product.available:
                     messages.error(
                         request,
-                        f"المنتج «{product.name}» " f"لم يعد متاحاً.",
+                        f"المنتج «{product.name}» لم يعد متاحًا.",
                     )
 
                     return redirect("shop:cart_detail")
@@ -418,17 +452,26 @@ def order_create(request):
                         request,
                         (
                             f"المنتج «{product.name}» "
-                            f"المتوفر منه "
-                            f"{product.stock} فقط."
+                            f"المتوفر منه {product.stock} فقط."
                         ),
                     )
 
                     return redirect("shop:cart_detail")
 
-            # إنشاء الطلب
-            order = form.save()
+            # ==================================================
+            # 4. إنشاء الطلب مع رسوم التوصيل
+            # ==================================================
 
-            # إنشاء عناصر الطلب وخصم المخزون
+            order = form.save(commit=False)
+
+            order.delivery_fee = delivery_zone.fee
+
+            order.save()
+
+            # ==================================================
+            # 5. إنشاء عناصر الطلب وخصم المخزون
+            # ==================================================
+
             for item in cart:
 
                 product = products_by_id[item["product"].id]
@@ -452,8 +495,12 @@ def order_create(request):
                     ]
                 )
 
-            # إرسال إشعار Telegram
+            # ==================================================
+            # 6. إرسال إشعار Telegram
+            # ==================================================
+
             try:
+
                 full_name = f"{order.first_name} " f"{order.last_name}"
 
                 total_price = order.get_total_cost()
@@ -466,14 +513,21 @@ def order_create(request):
                 )
 
             except Exception:
+
                 logger.exception(
                     "Failed to send Telegram notification " f"for order {order.id}",
                 )
 
-            # تفريغ السلة
+            # ==================================================
+            # 7. تفريغ السلة
+            # ==================================================
+
             cart.clear()
 
-            # عرض الفاتورة
+            # ==================================================
+            # 8. عرض الفاتورة
+            # ==================================================
+
             return render(
                 request,
                 "shop/order/created.html",
@@ -488,6 +542,7 @@ def order_create(request):
         )
 
     else:
+
         form = OrderCreateForm()
 
     return render(

@@ -1,236 +1,416 @@
-{% extends "shop/base.html" %} {% block title %}فاتورة الطلب #{{ order.id }} -
-متجر زيد{% endblock %} {% block content %}
-<div class="container mt-5 mb-5" style="direction: rtl; text-align: right">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div
-        class="card shadow-lg border-0 rounded-4 overflow-hidden"
-        id="invoice"
-      >
-        <!-- رأس الفاتورة -->
-        <div class="card-header bg-primary text-white p-4">
-          <div class="row align-items-center">
-            <div class="col-6">
-              <h2 class="fw-bold m-0">متجر زيد</h2>
-              <p class="small m-0">التجارة الإلكترونية</p>
+{% extends "shop/base.html" %}
+
+{% block title %}فاتورة الطلب #{{ order.id }} - متجر زيد{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5" style="direction: rtl; text-align: right;">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-8">
+
+            <div
+                class="card shadow-lg border-0 rounded-4 overflow-hidden"
+                id="invoice"
+            >
+
+                <!-- رأس الفاتورة -->
+                <div class="card-header bg-primary text-white p-4">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-6">
+
+                            <h2 class="fw-bold m-0">
+                                متجر زيد
+                            </h2>
+
+                            <p class="small m-0">
+                                التجارة الإلكترونية
+                            </p>
+
+                        </div>
+
+                        <div class="col-6 text-start">
+
+                            <h4 class="m-0">
+                                فاتورة طلب
+                            </h4>
+
+                            <p class="small m-0">
+                                رقم: #{{ order.id }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body p-5 bg-white">
+
+                    <!-- بيانات العميل -->
+                    <div class="row mb-4">
+
+                        <div class="col-6">
+
+                            <h6 class="text-muted fw-bold text-uppercase small">
+                                مقدمة إلى:
+                            </h6>
+
+                            <p class="fs-5 mb-1">
+                                <strong>
+                                    {{ order.first_name }}
+                                    {{ order.last_name }}
+                                </strong>
+                            </p>
+
+                            <p class="text-muted small mb-0">
+                                {{ order.address }}، {{ order.city }}
+                            </p>
+
+                            <p class="text-muted small">
+                                {{ order.phone }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="col-6 text-start">
+
+                            <h6 class="text-muted fw-bold text-uppercase small">
+                                تاريخ الطلب:
+                            </h6>
+
+                            <p class="mb-0">
+                                {{ order.created|date:"Y-m-d" }}
+                            </p>
+
+                            <p class="text-muted small">
+                                {{ order.created|time:"H:i" }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- بيانات التتبع -->
+                    <div class="alert alert-primary rounded-4 border-0 p-4 mb-4">
+
+                        <div class="text-center">
+
+                            <h5 class="fw-bold mb-3">
+                                🔐 بيانات متابعة طلبك
+                            </h5>
+
+                            <p class="text-muted mb-4">
+                                احتفظ بهذه البيانات لتتمكن من متابعة طلبك لاحقًا من أي جهاز.
+                            </p>
+
+
+                            <div class="row justify-content-center g-3">
+
+                                <!-- رقم الطلب -->
+                                <div class="col-md-5">
+
+                                    <div class="bg-white rounded-4 p-3 shadow-sm">
+
+                                        <small class="text-muted d-block mb-1">
+                                            رقم الطلب
+                                        </small>
+
+                                        <span class="fs-4 fw-bold text-primary">
+                                            #{{ order.id }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- رمز المتابعة -->
+                                <div class="col-md-5">
+
+                                    <div class="bg-white rounded-4 p-3 shadow-sm">
+
+                                        <small class="text-muted d-block mb-1">
+                                            رمز المتابعة
+                                        </small>
+
+                                        <span
+                                            class="fs-4 fw-bold text-dark"
+                                            style="letter-spacing: 3px"
+                                        >
+                                            {{ order.tracking_code }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="mt-4">
+
+                                <a
+                                    href="{% url 'shop:order_track' %}?new=1"
+                                    class="btn btn-primary rounded-pill px-4"
+                                >
+                                    <i class="bi bi-search me-2"></i>
+                                    تتبع طلبي
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- المنتجات -->
+                    <div class="table-responsive">
+
+                        <table class="table table-borderless border-bottom">
+
+                            <thead class="bg-light">
+
+                                <tr>
+
+                                    <th class="py-3 px-4">
+                                        المنتج
+                                    </th>
+
+                                    <th class="py-3 text-center">
+                                        الكمية
+                                    </th>
+
+                                    <th class="py-3 text-start">
+                                        السعر
+                                    </th>
+
+                                    <th class="py-3 text-start">
+                                        الإجمالي
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                {% for item in order.items.all %}
+
+                                <tr>
+
+                                    <td class="py-3 px-4">
+
+                                        <span class="fw-bold text-dark">
+                                            {{ item.product.name }}
+                                        </span>
+
+                                    </td>
+
+
+                                    <td class="py-3 text-center">
+                                        {{ item.quantity }}
+                                    </td>
+
+
+                                    <td class="py-3 text-start">
+                                        {{ item.price }} ريال
+                                    </td>
+
+
+                                    <td class="py-3 text-start fw-bold">
+                                        {{ item.get_cost }} ريال
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <!-- ملخص المبلغ -->
+                    <div class="row mt-4 justify-content-start">
+
+                        <div class="col-md-6">
+
+                            <div class="bg-light p-4 rounded-4">
+
+                                <!-- قيمة المنتجات -->
+                                <div class="d-flex justify-content-between mb-2">
+
+                                    <span class="text-muted">
+                                        قيمة المنتجات:
+                                    </span>
+
+                                    <span class="fw-bold">
+                                        {{ order.get_subtotal }} ريال
+                                    </span>
+
+                                </div>
+
+
+                                <!-- المدينة -->
+                                <div class="d-flex justify-content-between mb-2">
+
+                                    <span class="text-muted">
+                                        مدينة التوصيل:
+                                    </span>
+
+                                    <span class="fw-bold">
+                                        {{ order.city }}
+                                    </span>
+
+                                </div>
+
+
+                                <!-- رسوم التوصيل -->
+                                <div class="d-flex justify-content-between mb-2">
+
+                                    <span class="text-muted">
+                                        رسوم التوصيل:
+                                    </span>
+
+                                    <span class="text-success fw-bold">
+
+                                        {% if order.delivery_fee > 0 %}
+                                            {{ order.delivery_fee }} ريال
+                                        {% else %}
+                                            مجاني
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+
+                                <hr />
+
+
+                                <!-- الإجمالي النهائي -->
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <span class="h5 fw-bold">
+                                        المطلوب سداده:
+                                    </span>
+
+                                    <span class="h5 fw-bold text-primary">
+                                        {{ order.get_total_cost }} ريال
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- أسفل الفاتورة -->
+                    <div class="mt-5 pt-4 border-top text-center">
+
+                        <p class="text-muted small">
+                            شكراً لتسوقكم من متجر زيد.
+                            نحن نقدر ثقتكم بنا!
+                        </p>
+
+
+                        <div class="d-print-none mt-4">
+
+                            <button
+                                onclick="window.print()"
+                                class="btn btn-dark rounded-pill px-4 me-2"
+                            >
+
+                                <i class="bi bi-printer me-2"></i>
+
+                                طباعة الفاتورة
+
+                            </button>
+
+
+                            <a
+                                href="{% url 'shop:product_list' %}"
+                                class="btn btn-outline-primary rounded-pill px-4"
+                            >
+
+                                العودة للرئيسية
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="col-6 text-start">
-              <h4 class="m-0">فاتورة طلب</h4>
-              <p class="small m-0">رقم: #{{ order.id }}</p>
-            </div>
-          </div>
         </div>
 
-        <div class="card-body p-5 bg-white">
-          <!-- بيانات العميل -->
-          <div class="row mb-4">
-            <div class="col-6">
-              <h6 class="text-muted fw-bold text-uppercase small">
-                مقدمة إلى:
-              </h6>
-
-              <p class="fs-5 mb-1">
-                <strong> {{ order.first_name }} {{ order.last_name }} </strong>
-              </p>
-
-              <p class="text-muted small mb-0">
-                {{ order.address }}، {{ order.city }}
-              </p>
-
-              <p class="text-muted small">{{ order.phone }}</p>
-            </div>
-
-            <div class="col-6 text-start">
-              <h6 class="text-muted fw-bold text-uppercase small">
-                تاريخ الطلب:
-              </h6>
-
-              <p class="mb-0">{{ order.created|date:"Y-m-d" }}</p>
-
-              <p class="text-muted small">{{ order.created|time:"H:i" }}</p>
-            </div>
-          </div>
-
-          <!-- بيانات التتبع -->
-          <div class="alert alert-primary rounded-4 border-0 p-4 mb-4">
-            <div class="text-center">
-              <h5 class="fw-bold mb-3">🔐 بيانات متابعة طلبك</h5>
-
-              <p class="text-muted mb-4">
-                احتفظ بهذه البيانات لتتمكن من متابعة طلبك لاحقًا من أي جهاز.
-              </p>
-
-              <div class="row justify-content-center g-3">
-                <div class="col-md-5">
-                  <div class="bg-white rounded-4 p-3 shadow-sm">
-                    <small class="text-muted d-block mb-1"> رقم الطلب </small>
-
-                    <span class="fs-4 fw-bold text-primary">
-                      #{{ order.id }}
-                    </span>
-                  </div>
-                </div>
-
-                <div class="col-md-5">
-                  <div class="bg-white rounded-4 p-3 shadow-sm">
-                    <small class="text-muted d-block mb-1">
-                      رمز المتابعة
-                    </small>
-
-                    <span
-                      class="fs-4 fw-bold text-dark"
-                      style="letter-spacing: 3px"
-                    >
-                      {{ order.tracking_code }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="mt-4">
-                <a href="{% url 'shop:order_track' %}?new=1" class="btn btn-primary rounded-pill px-4">
-                
-                <i class="bi bi-search me-2"></i>
-                  تتبع طلبي
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- المنتجات -->
-          <div class="table-responsive">
-            <table class="table table-borderless border-bottom">
-              <thead class="bg-light">
-                <tr>
-                  <th class="py-3 px-4">المنتج</th>
-                  <th class="py-3 text-center">الكمية</th>
-                  <th class="py-3 text-start">السعر</th>
-                  <th class="py-3 text-start">الإجمالي</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {% for item in order.items.all %}
-
-                <tr>
-                  <td class="py-3 px-4">
-                    <span class="fw-bold text-dark">
-                      {{ item.product.name }}
-                    </span>
-                  </td>
-
-                  <td class="py-3 text-center">{{ item.quantity }}</td>
-
-                  <td class="py-3 text-start">{{ item.price }} ريال</td>
-
-                  <td class="py-3 text-start fw-bold">
-                    {{ item.get_cost }} ريال
-                  </td>
-                </tr>
-
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-
-          <!-- الإجمالي -->
-          <div class="row mt-4 justify-content-start">
-            <div class="col-md-5">
-              <div class="bg-light p-4 rounded-4">
-                <div class="d-flex justify-content-between mb-2">
-                  <span class="text-muted"> المبلغ الإجمالي: </span>
-
-                  <span class="fw-bold"> {{ order.get_total_cost }} ريال </span>
-                </div>
-
-                <div class="d-flex justify-content-between mb-2">
-                  <span class="text-muted"> التوصيل: </span>
-
-                  <span class="text-success fw-bold"> مجاني </span>
-                </div>
-
-                <hr />
-
-                <div class="d-flex justify-content-between">
-                  <span class="h5 fw-bold"> المطلوب سداده: </span>
-
-                  <span class="h5 fw-bold text-primary">
-                    {{ order.get_total_cost }} ريال
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- أسفل الفاتورة -->
-          <div class="mt-5 pt-4 border-top text-center">
-            <p class="text-muted small">
-              شكراً لتسوقكم من متجر زيد. نحن نقدر ثقتكم بنا!
-            </p>
-
-            <div class="d-print-none mt-4">
-              <button
-                onclick="window.print()"
-                class="btn btn-dark rounded-pill px-4 me-2"
-              >
-                <i class="bi bi-printer me-2"></i>
-                طباعة الفاتورة
-              </button>
-
-              <a
-                href="{% url 'shop:product_list' %}"
-                class="btn btn-outline-primary rounded-pill px-4"
-              >
-                العودة للرئيسية
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+
 </div>
 
+
 <style>
-  /* تنسيق خاص للطباعة */
-  @media print {
-    body * {
-      visibility: hidden;
+
+    /* تنسيق خاص للطباعة */
+    @media print {
+
+        body * {
+            visibility: hidden;
+        }
+
+        #invoice,
+        #invoice * {
+            visibility: visible;
+        }
+
+        #invoice {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
+        .d-print-none {
+            display: none !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+
     }
 
-    #invoice,
-    #invoice * {
-      visibility: visible;
-    }
 
     #invoice {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
+        border-radius: 20px !important;
+        background-color: #fff;
     }
 
-    .d-print-none {
-      display: none !important;
+
+    .table thead th {
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        color: #555;
     }
 
-    .card {
-      box-shadow: none !important;
-      border: 1px solid #ddd !important;
-    }
-  }
-
-  #invoice {
-    border-radius: 20px !important;
-    background-color: #fff;
-  }
-
-  .table thead th {
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-    color: #555;
-  }
 </style>
 
 {% endblock %}

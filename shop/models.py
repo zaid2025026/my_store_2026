@@ -55,6 +55,34 @@ class Product(models.Model):
         return reverse("shop:product_detail", args=[self.id, self.slug])
 
 
+class DeliveryZone(models.Model):
+    city = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name="المدينة",
+    )
+
+    fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name="رسوم التوصيل",
+    )
+
+    active = models.BooleanField(
+        default=True,
+        verbose_name="مفعلة",
+    )
+
+    class Meta:
+        ordering = ["city"]
+        verbose_name = "منطقة توصيل"
+        verbose_name_plural = "مناطق التوصيل"
+
+    def __str__(self):
+        return f"{self.city} - {self.fee}"
+
+
 class Order(models.Model):
     first_name = models.CharField(max_length=50, verbose_name="الاسم الأول")
 
@@ -65,6 +93,13 @@ class Order(models.Model):
     address = models.CharField(max_length=250, verbose_name="العنوان")
 
     city = models.CharField(max_length=100, verbose_name="المدينة")
+
+    delivery_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name="رسوم التوصيل",
+    )
 
     created = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الإنشاء")
 
@@ -120,8 +155,11 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id}"
 
-    def get_total_cost(self):
+    def get_subtotal(self):
         return sum(item.get_cost() for item in self.items.all())
+
+    def get_total_cost(self):
+        return self.get_subtotal() + self.delivery_fee
 
 
 class OrderItem(models.Model):

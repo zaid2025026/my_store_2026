@@ -1,7 +1,7 @@
 from django.contrib import admin, messages
 from django.db import transaction
 
-from .models import Category, Product, Order, OrderItem
+from .models import Category, Product, Order, OrderItem, DeliveryZone
 
 
 @admin.register(Category)
@@ -40,6 +40,32 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ["product"]
     extra = 0
+
+
+@admin.register(DeliveryZone)
+class DeliveryZoneAdmin(admin.ModelAdmin):
+    list_display = [
+        "city",
+        "fee",
+        "active",
+    ]
+
+    list_filter = [
+        "active",
+    ]
+
+    search_fields = [
+        "city",
+    ]
+
+    list_editable = [
+        "fee",
+        "active",
+    ]
+
+    ordering = [
+        "city",
+    ]
 
 
 @admin.register(Order)
